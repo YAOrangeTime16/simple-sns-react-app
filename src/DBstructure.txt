@@ -1,0 +1,77 @@
+firebase data structure
+
+{
+    "users" : {
+        "user id" : {
+            username: "Diana",
+            email: "diana@email.com",
+            posts: {
+                post id: true,
+                post id: true
+            },
+            liked posts : {
+                post id: true,
+                post id: true
+            },
+            commented posts : {
+                post id: true
+            }
+        },
+        "user id" : {
+            username: "John",
+            email: "john@email.com",
+            posts: {
+                post id: true,
+                post id: true
+            },
+            liked posts : {
+                post id: true,
+                post id: true
+            },
+            commented posts : {
+                post id: true
+            }
+        }
+    },
+    
+    "posts" : {
+        "post id" : {
+            title: "title1"
+            text: "text text"
+            date: "2017-09-18",
+            photo: photoURL || null
+            postedBy: user id,
+            nrLikes: 20,
+            likes: {
+                user id:
+                user id: 
+            },
+            comments : {
+                comment id:
+                comment id:
+            }
+        },
+        "post id" : {
+            title: "title2"
+            text: "text text"
+            date: "2017-09-18"
+            postedBy: user id
+            likes: {
+                user id: 
+            },
+            comments : {
+                comment id:
+                comment id:
+            }
+        }
+    },
+        
+    "comments" : {
+        "comment id" : {
+            commentText : "comment",
+            commentTo : post id,
+            commentedBy : user id
+        }
+    }
+
+}
