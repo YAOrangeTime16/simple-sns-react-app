@@ -1,5 +1,4 @@
 import React from 'react';
-import { TextDiv } from './style';
 
 // Parent : index.js (Contents)
 

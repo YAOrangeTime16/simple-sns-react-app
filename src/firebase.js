@@ -5,7 +5,7 @@ var config = {
     authDomain: "react-exam-43188.firebaseapp.com",
     databaseURL: "https://react-exam-43188.firebaseio.com",
     projectId: "react-exam-43188",
-    storageBucket: "",
+    storageBucket: "gs://react-exam-43188.appspot.com/",
     messagingSenderId: "297943420171"
 };
 

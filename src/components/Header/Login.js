@@ -27,7 +27,7 @@ class Login extends Component {
                         type="password"
                         name="password"
                         placeholder="password"
-                        value={this.props.password}
+                        
                         onChange={this.props.onChange}/>
                     <ButtonStyled primary type="submit">Login</ButtonStyled>
                     <p>{ errorMessage }</p>

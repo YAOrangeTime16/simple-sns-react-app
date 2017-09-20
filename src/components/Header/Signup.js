@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //---- Styles
-import { ButtonStyled, CloseButton, InputStyled, Link } from './style';
+import { ButtonStyled, CloseButton, InputStyled } from './style';
 import { Flexbox } from '../General/style';
 //---- Component Files
 
@@ -16,11 +16,6 @@ class Signup extends Component {
                     </CloseButton>
                     <Flexbox col>
                     <InputStyled attention 
-                        type="text" 
-                        name="username" placeholder="username"
-                        value={this.props.username}
-                        onChange={this.props.onChange} />
-                    <InputStyled attention 
                         type="email" 
                         name="email" 
                         placeholder="email"
@@ -30,12 +25,10 @@ class Signup extends Component {
                         type="email" 
                         name="email2" 
                         placeholder="comfirm email"
-                        value={this.props.email2}
                         onChange={this.props.onChange} />
                     <InputStyled attention 
                         type="password" 
                         name="password" placeholder="password"
-                        value={this.props.password}
                         onChange={this.props.onChange} />
                     <ButtonStyled attention>Sign up</ButtonStyled>
                     <p>{ errorMessage }</p>

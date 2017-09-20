@@ -33,22 +33,23 @@ class Post extends Component {
         
         const postObj = {
             uid: this.props.user.uid,
-            userName: this.props.user.displayName,
+            userName: this.props.user.username || '',
             text: this.state.text,
             img: null,
             likes: 0,
-            likedBy: '',
-            postId: timestamp,
+            alreadyLiked: false,
+            timeStamp: timestamp,
             dateForDisplay: date
         }
         
    if(this.state.text){
        firebase.database().ref(`/posts`).push(postObj)
-           .then(
+           .then((post) => { 
+           firebase.database().ref(`users/${postObj.uid}/posts`).push(post.key);
            this.setState({message: 'posted'})
+       }
            ).catch(error => this.setState({ message: error}));
-       
-   } else {
+       } else {
        this.setState({message: 'Please fill in'})
    }
     }

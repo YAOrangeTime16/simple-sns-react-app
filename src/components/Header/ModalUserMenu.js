@@ -7,7 +7,7 @@ import UserMenu from './UserMenu';
 function ModalUserMenu(props){
     return(
         <div>
-                <UserMenu {...props}/>
+            <UserMenu {...props}/>
         </div>
     );
 }

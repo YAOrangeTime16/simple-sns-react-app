@@ -52,9 +52,25 @@ export const TextArea = styled.textarea`
     }
 `;
 
+export const InputStyled = styled.input`
+    padding: 0.5rem 1rem;
+    margin: 1.5rem auto;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid ${props => props.attention ? '#ef857d' : '#0033cc'};
+    width: 30%;
+    font-size: 1.3rem;
+    font-family: 'Bubbler One', sans-serif;
+`;
+
 export const Message = styled.div`
     text-align: center;
     font-size: 2rem;
     font-weight: 700;
     color: #ef857d;
+`;
+
+export const ProgressBar = styled.progress`
+    margin: 1rem;
 `;

@@ -19,12 +19,14 @@ export const TextDiv = styled.div`
     }
 
     >div.name {
-        color: red;
+        color: #ef857d;
+        font-weight: 700;
         text-align: left;
     }
 
     >div.date {
-    text-align: right;
+        text-align: right;
+        color: #0033cc;
        font-size: 1rem;
     }
 `;
@@ -43,8 +45,4 @@ export const ButtonLike = styled.button`
         background: rgba(102, 153, 204, 0.5);
         color: white;
     }
-`;
-
-export const CategoryIcons = styled.div`
-
 `;

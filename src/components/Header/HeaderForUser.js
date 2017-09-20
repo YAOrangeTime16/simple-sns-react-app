@@ -3,7 +3,13 @@ import { HeaderUser } from './style';
 
 function HeaderForUser(props){
     return(
-        <HeaderUser><div>Only My Posts</div></HeaderUser>
+        <div>
+        <HeaderUser>
+        <input type="checkbox" id="check" value={!props.filteringChecked} onClick={props.onFilteringCheck} />
+        <label htmlFor="check" >Only My Posts</label>
+        </HeaderUser>
+        
+        </div>
     );
     
 }

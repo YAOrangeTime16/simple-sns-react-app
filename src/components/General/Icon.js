@@ -18,7 +18,7 @@ C356.406,323.891,346.469,309.688,325.906,306.188z"/></g></svg>
 		c-35.336,0-64-28.641-64-64c0-35.344,28.664-64,64-64c35.359,0,64,28.656,64,64C320,307.359,291.359,336,256,336z"/>
 </g></svg>
           
-    const {p, u} = props;
+    const {p} = props;
     const iconType = p ? photoIcon : userIcon;
     return(
         <StyledIcon {...props} onClick={props.onModalShow}>

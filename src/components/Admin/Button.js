@@ -5,7 +5,7 @@ import { ButtonStyled } from './style';
 
 function Button(props){
     return(
-        <ButtonStyled >Post</ButtonStyled>
+        <ButtonStyled >OK</ButtonStyled>
     );
 }
 

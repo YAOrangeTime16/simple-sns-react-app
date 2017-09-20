@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 
 //---- Header style ----------------------
+export const HeaderFlexbox = styled.div`
+    display: flex;
+    cursor: pointer;
+`;
 
 export const HeaderStyled = styled.div`
     background: #6699cc;
     margin: 0;
-    width: 100vw;
+    width: 100%;
     height: 5rem;
     display: flex;
     flex-direction: row;
@@ -13,23 +17,33 @@ export const HeaderStyled = styled.div`
 `;
 
 export const HeaderUser = styled.div`
-    width: 100vw;
+
     height: 3.5rem;
     background: #dbdbdb;
-    color: white;
+    width: 100%;
     font-size: 1.5rem;
     display: flex;
     align-content: center;
 
-    >div{
+    >input[type=checkbox] {
+        display: none;
+
+        &:checked + label{
+            background: blue;
+        }
+    }
+
+    >label{
         width: fit-content;
         text-align: center;
         margin: auto;
         padding: .5rem;
         cursor: pointer;
         border: 1px solid white;
-}
+        color: white;
+    }
 `;
+
 export const Logo = styled.div`
     font-size: 3rem;
     font-family: 'Bubbler One', sans-serif;
@@ -37,13 +51,13 @@ export const Logo = styled.div`
     color: white;
 `;
 
-export const UserName = styled.div`
+export const StyledUserName = styled.div`
     font-size: 1.5rem; 
     margin: auto 0;
     
 `;
 
-export const UserNameCursor = styled(UserName)`
+export const UserNameCursor = styled(StyledUserName)`
     cursor: pointer;
 `;
 

@@ -1,18 +1,22 @@
 import React from 'react';
+import firebase from '.:/../firebase';
 import { TextDiv } from './style';
 
 // Parent : Contents
 
 function TextArea (props) {
-    const nameDisplay = props.userName 
-                        ? props.userName 
-                        : 'Anonymous';
+    let userName;
+    firebase.database().ref(`users/${props.userID}`).once('value', snapshot => {
+        userName = snapshot.val().username;
+    })
+    const nameDisplay = userName ? userName : 'No Username';
     return(
         <div>
             <TextDiv>
-                <div className="date">{ props.dateForDisplay }</div>
                 <div className="name">{ nameDisplay }</div>
-                {props.text}
+                <div>{props.text}</div>
+                <div className="date">{ props.dateForDisplay }</div>
+                {props.children}
             </TextDiv>
         </div>
     );
