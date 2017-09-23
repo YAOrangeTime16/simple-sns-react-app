@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //---- Styles
-import { ButtonStyled, CloseButton, InputStyled } from './style';
+import { ButtonStyled, CloseButton, InputStyled, Link } from './style';
 import { Flexbox } from '../General/style';
 //---- Component Files
 
@@ -32,7 +32,10 @@ class Signup extends Component {
                         onChange={this.props.onChange} />
                     <ButtonStyled attention>Sign up</ButtonStyled>
                     <p>{ errorMessage }</p>
-                   <ButtonStyled fb>Facebook</ButtonStyled>
+                   <ButtonStyled g onClick={this.props.onLoginWithGoogle}>with Google</ButtonStyled>
+                   <Link attention bold>
+                    <div onClick={this.props.userType}>Login?</div>
+                    </Link>
                 </Flexbox>
             </form>
                     

@@ -31,7 +31,7 @@ class Login extends Component {
                         onChange={this.props.onChange}/>
                     <ButtonStyled primary type="submit">Login</ButtonStyled>
                     <p>{ errorMessage }</p>
-                    <ButtonStyled fb>Facebook</ButtonStyled>
+                    <ButtonStyled g onClick={this.props.onLoginWithGoogle}>with Google</ButtonStyled>
 
                 <Link attention bold>
                     <div onClick={this.props.userType}>Create a new account?</div>

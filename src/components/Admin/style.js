@@ -23,10 +23,13 @@ export const ButtonStyled = styled.button`
     }
 `;
 
+export const Cursor = styled.div`
+    cursor: pointer;
+`;
 export const CloseButton = styled.div`
     margin: 1rem;
     text-align: center;
-    cursor: pointer;
+    font-weight: 600;
 `;
 
 export const Flexbox = styled.div`
@@ -47,7 +50,7 @@ export const TextArea = styled.textarea`
     padding: 1rem;
     line-height: 2rem;
 
-@media (min-width: 768px){
+    @media (min-width: 768px){
         width: 50%;
     }
 `;

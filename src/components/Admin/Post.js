@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import firebase from '../../firebase';
 
-import { Flexbox, Message, CloseButton } from './style';
+import { Flexbox, Message, CloseButton, Cursor } from './style';
 import Button from './Button';
 //import Message from './Message';
 import Photoloader from './Photoloader';
@@ -16,10 +16,6 @@ class Post extends Component {
         message: ''
     }
 
-    ComponentDidMount(){
-
-    }
-
     addPost = (e)=>{
         e.preventDefault();
         const d = new Date();
@@ -30,28 +26,37 @@ class Post extends Component {
             d.getMonth() + 1,
             d.getDate()
             ].join( '-' );
+        //get userID, displayName
+        const currentUser = firebase.auth().currentUser;
+        const userID = currentUser.uid;
         
+        //create a post object to send
         const postObj = {
-            uid: this.props.user.uid,
-            userName: this.props.user.username || '',
+            uid: userID,
             text: this.state.text,
             img: null,
             likes: 0,
-            alreadyLiked: false,
+            likedBy: '',
             timeStamp: timestamp,
             dateForDisplay: date
         }
         
-   if(this.state.text){
-       firebase.database().ref(`/posts`).push(postObj)
-           .then((post) => { 
-           firebase.database().ref(`users/${postObj.uid}/posts`).push(post.key);
-           this.setState({message: 'posted'})
-       }
-           ).catch(error => this.setState({ message: error}));
-       } else {
-       this.setState({message: 'Please fill in'})
-   }
+        if(this.state.text){
+           //add postObj to posts DB
+           const postsRef = firebase.database().ref(`/posts`);
+
+           postsRef.push(postObj)
+           //then add postID to the users database
+            .then((post) => {
+                const usersPostsRef = firebase.database().ref(`users/${postObj.uid}/posts`);
+
+                usersPostsRef.push(post.key)
+                .catch(error => console.log(`failed to add postID: ${error}`));
+               //AND set State to show a message
+               this.setState({message: 'posted!'})
+           })
+            .catch(error => this.setState({ message: error.message}));
+        }
     }
     
     onChangeText = (e)=>{
@@ -64,8 +69,10 @@ class Post extends Component {
         
         return(
            <div>
-            <CloseButton onClick={this.props.onClosePost}>Back to Main Page</CloseButton>
+            <Cursor onClick={this.props.onClosePost}>
+            <CloseButton >Back to Main Page</CloseButton>
             <Message>{this.state.message}</Message>
+            </Cursor>
                
             <form onSubmit={this.addPost}>
                 <Flexbox col>

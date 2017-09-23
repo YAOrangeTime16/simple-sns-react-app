@@ -4,6 +4,8 @@ import styled from 'styled-components';
 export const HeaderFlexbox = styled.div`
     display: flex;
     cursor: pointer;
+    flex-direction: row;
+    align-content: center;
 `;
 
 export const HeaderStyled = styled.div`
@@ -45,15 +47,21 @@ export const HeaderUser = styled.div`
 `;
 
 export const Logo = styled.div`
-    font-size: 3rem;
+    font-size: 2rem;
     font-family: 'Bubbler One', sans-serif;
     margin: auto auto auto 2rem;
     color: white;
+    @media (min-width: 768px){
+        font-size: 3rem;
+    }
 `;
 
 export const StyledUserName = styled.div`
-    font-size: 1.5rem; 
+    font-size: 1.3rem; 
     margin: auto 0;
+    @media (min-width: 768px){
+        font-size: 1.5rem;
+    }
     
 `;
 
@@ -78,7 +86,7 @@ export const StyledIcon = styled.div`
 export const ButtonStyled = styled.button`
     background: ${props=> props.primary ? '#0033cc' 
                     : props.attention ? '#ef857d' 
-                    : props.fb ? '#3b5998' 
+                    : props.g ? '#d62d20' 
                     :'#99ccff' };
     height: 2.5rem;
     width: 10rem;

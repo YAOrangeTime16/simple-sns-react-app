@@ -10,7 +10,7 @@ function UserIcon(props){
         <div>
            <Image 
             src={ props.user.photoURL }
-            alt="profile"
+            alt="photo"
             noImageAlt="no image"
             width={50}
             height={50}
@@ -25,4 +25,5 @@ const withUserCheck = (BasicComponent)=>(props)=>{
 }
 
 const UserIconWithUserCheck = withUserCheck(UserIcon);
+
 export default UserIconWithUserCheck;

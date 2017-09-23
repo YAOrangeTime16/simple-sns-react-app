@@ -3,7 +3,7 @@ import firebase from './firebase';
 //--- style file
 import { Webpage } from './components/General/style';
 //--- component files
-import ContentsWithFilterCheck from './components/Contents';
+import ContentsWithLoginCheck from './components/Contents';
 import Header from './components/Header';
 import ModalwithTriggerCheck from './components/Header/Modal';
 import Post from './components/Admin/Post';
@@ -18,33 +18,35 @@ class App extends Component {
         loginType: true,
         toggleAdmin: 0,
         modalMenu: false,
+        error: '',
+        //check login
+        password: '',
+        email:'',
+        email2:'',
         //sync with DB
         postsArray: [],
         user: '',
         loginStatus: false,
-        //login
-        password: '',
-        email:'',
-        email2:'',
-        error: '',
-        errorDeffEmail: false,
         //Profile
         username: '',
-        photoURL: null,
+        //photoURL: null,
         photoObj: '',
+        photofile: null,
         uploaded: 0,
         profileloader: false,
         //Contents
-        filteringChecked: false
+        filteringChecked: false,
     }
     
+    //------- For ComponentDidMount
     UpdateUser = ()=>{
-        firebase.database().ref(`users`)
-        .on('child_changed', snapshot => { console.log(snapshot.val())
-            const newUserObj = Object.assign({}, this.state.user, { username: snapshot.val().username,
-                                                                  photoURL: snapshot.val().photoURL});
+        const userRef = firebase.database().ref(`users`);
+        
+        userRef.on('child_changed', snapshot => {
+            const newUserObj = Object.assign({}, this.state.user, { username: snapshot.val().username, photoURL: snapshot.val().photoURL});
             this.setState({ user: newUserObj })
-        })
+        });
+        
     }
 
     AddNewPost=()=>{
@@ -90,10 +92,6 @@ class App extends Component {
                 }
                 this.setState({user: userObj});
                 console.log('logged in' + user.uid);
-                if(this.state.photoURL != null){
-                    firebase.storage().ref(`profilePhotos/${user.uid}`).getDownloadURL()
-                    .then( (url) => url ? this.setState({photoURL: url}) : null )
-                };       
                 
             } else {
                     this.setState({loginStatus: false, user: ''})
@@ -108,6 +106,8 @@ class App extends Component {
         this.UpdateUser();
         this.LoginCheck();
     }
+
+    //----- Other Methods
 
     onChange = (e)=>{
         this.setState({ [e.target.name]: e.target.value })
@@ -150,7 +150,7 @@ class App extends Component {
     }
     
     onSwitchUserType = () =>{
-        this.setState({loginType: false});
+        this.setState({loginType: !this.state.loginType});
     }
     
     onFilteringCheck =(e)=>{
@@ -167,9 +167,8 @@ class App extends Component {
             this.setState({error: true});
         } else {
             firebase.auth().signInWithEmailAndPassword(email, password).then( ()=>{ 
-                console.log('logged in');
-            } ).catch( (error) => { console.log(error.message);
-                this.setState({error: error.message})
+                this.setState({ error: '' })
+            } ).catch( (error) => { this.setState({error: error.message})
             })
         }
         
@@ -187,34 +186,43 @@ class App extends Component {
                 firebase.database().ref(`users/${user.uid}`).set(
                 {
                     uid: user.uid,
-                    email: user.email
+                    email: user.email,
+                    username: 'No Name'
                 })
-            }).catch( (error) =>{ console.log(error.message); this.setState({error: error.message}) })
+            }).then(()=>{ this.setState({loginType: true, error: '' }); }).catch( (
+                error) =>{ this.setState({error: error.message}) })
         }
+    }
+    
+    onLoginWithGoogle =(e)=>{
+        e.preventDefault();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithRedirect(provider)
+        .then(()=>{ this.setState({error: ''})})
+        .catch(error=> {
+            this.setState({error: error.message});
+        })
     }
     
     onSignout = (e)=>{
         e.preventDefault();
         firebase.auth().signOut()
-            .then(()=>{this.setState({ modalMenu: false })})
-            .catch(error => console.log(error))
+            .then(()=>{this.setState({ modalMenu: false, toggleAdmin: 0 })})
+            .catch(error => console.log(error.message))
     }
     
     getPhoto =(e)=>{
         const photos = e.target.files;
-        const photo = photos[0]
-        console.log(photo)
-        console.log(photos)
-        
-        this.setState({ photoObj: photo})
+        const photo = photos[0]        
+        this.setState({ photoObj: photo, photofile: photo.name});
     }
     
     changeProfile =(e)=>{
         e.preventDefault();
         const userInfo = firebase.auth().currentUser;
+        const userDBref = firebase.database().ref(`users/${userInfo.uid}`);
         
-        
-        if(this.state.photoObj){  //---start if(photoObj)
+        if(this.state.photoObj){  //---startif
             const metadata = {
                 contentType: 'image/jpeg',
             };
@@ -226,8 +234,13 @@ class App extends Component {
             uploadFile.on('state_changed', (snapshot)=>{
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 if(progress === 100) {
-                    console.log('uplodaded')
-                    this.setState({ toggleAdmin: 0, profileloader: false })
+                    this.setState(
+                        { 
+                            toggleAdmin: 0, 
+                            profileloader: false, 
+                            photofile: null 
+                        }
+                    )
                 } else {
                     console.log('Uploading...');
                     this.setState({ uploaded: progress})
@@ -235,32 +248,41 @@ class App extends Component {
             } )
         
             uploadFile.then( (snapshot) =>{ 
-                this.setState({photoURL: snapshot.metadata.downloadURLs[0]});
+                const photoURL = snapshot.metadata.downloadURLs[0];
+                const photoURLData = {photoURL: photoURL}
 
-                const newUserProfileToFirebase = {
-                    photoURL: this.state.photoURL
-                }
-    
                 //Update profile on firebase auth
-                userInfo.updateProfile(newUserProfileToFirebase).then( ()=>{
+                userInfo.updateProfile(photoURLData).then( ()=>{
+                    //update state
+                    const newUserObj = Object.assign({}, this.state.user, photoURLData);
+                    this.setState({ user: newUserObj })
                 // also update on firebase database
-                firebase.database().ref(`users/${userInfo.uid}`).update(newUserProfileToFirebase)
+                userDBref.update(photoURLData)
                 })
             })
-        } //--end if(photoObj)
+        } //--endif(photoObj)
+
+        //if new username was empty : use the current username
+        //if new username has new input : use this new username
+        const useThisName = this.state.username ? this.state.username : this.state.user.username ? this.state.user.username : '';
+        console.log(`useThisName : ${useThisName}`)
         
-        const newUserProfileToAuth = {
-            displayName: this.state.username
+        const newProfileToAuth = {
+            displayName: useThisName
         }
-                
-        const newUserProfileToDatabase = {
-            username: this.state.username
+        
+        const newProfileToDatabase = {
+            username: useThisName,
+            photoURL: this.state.user.photoURL || ''
         }
 
         //Update profile on firebase auth
-        userInfo.updateProfile(newUserProfileToAuth).then( ()=>{
+        userInfo.updateProfile(newProfileToAuth).then( ()=>{
+            //update state
+            const newUserObj = Object.assign({}, this.state.user, newProfileToDatabase);
+            this.setState({ user: newUserObj })
         // also update on firebase database
-        firebase.database().ref(`users/${userInfo.uid}`).update(newUserProfileToDatabase)
+        userDBref.update(newProfileToDatabase)
         })
         
         if(!this.state.photoObj){
@@ -275,10 +297,12 @@ class App extends Component {
             onClosePost={this.onClosePost}/>
         : (this.state.toggleAdmin === 2) 
         ? <Profile {...this.state}
+            onCloseProfile={this.onCloseProfile}
             onChange={this.onChange} 
             changeProfile={this.changeProfile}
             getPhoto={this.getPhoto}/>
-        : <ContentsWithFilterCheck {...this.state} />
+        : <ContentsWithLoginCheck {...this.state} onToggleLike={this.onToggleLike}
+        onOpenPost={this.onOpenPost}/>
     
     return (
       <Webpage>
@@ -300,6 +324,7 @@ class App extends Component {
             onChange={this.onChange}
             triggerModal={this.state.triggerModal}
             onModalOff={this.onModalOff}
+            onLoginWithGoogle={this.onLoginWithGoogle}
             
             loginType={ this.state.loginType }
             userType = { this.onSwitchUserType } />

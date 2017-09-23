@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ModalContent, ModalOverlay } from './style';
+//import { ModalContent, ModalOverlay } from './style';
 import UserMenu from './UserMenu';
 
 // Parent : App.js

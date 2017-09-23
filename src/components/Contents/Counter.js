@@ -1,15 +1,15 @@
 import React from 'react';
+import { StyledCounter } from './style';
 
 // Parent : index.js (Contents)
 
 function Counter(props){
     
-    const likes = props.count ? '1' : '0';
     
     return(
-        <div>
-            { likes }
-        </div>
+        <StyledCounter>
+            {props.likes} likes
+        </StyledCounter>
     );
 }
 
