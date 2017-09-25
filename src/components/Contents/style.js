@@ -2,6 +2,16 @@ import styled from 'styled-components';
 
 //---- Contents style ---------------
 
+export const BackgroundColor = styled.div`
+    background: linear-gradient(#6699cc, #ef857d );
+    min-height: 100vh;
+`;
+
+export const StyledText = styled.p`
+    color: white;
+    font-size: 1.5rem;
+`;
+
 export const ContentFlexbox = styled.div`
     display: flex;
     justify-content: ${props=>props.between ? 'space-between' : 'center'};
@@ -19,31 +29,12 @@ export const ContentFlexbox = styled.div`
     }
 `;
 
-export const NoPostsMessage = styled.div`
-    display: flex;
-    margin: 1.7rem auto;
-    border: 2px solid #ef857d;
-    cursor: pointer;
-
-    >p {
-        font-size: 2rem;
-        color: #ef857d;
-        padding: 0 1rem;
-    }
-
-    &:hover {
-        background: #ef857d;
-        >p{
-            color: white;
-        }
-    }
-`;
-
 export const TextDiv = styled.div`
-    width: 80vw;
+    width: 85vw;
     height: auto;
     background: rgba(255, 255, 255, 0.9);
     border: .5px solid #6699cc;
+    border-radius: 5px;
     text-align: center;
     margin: 3rem auto;
     padding: 1rem;
@@ -67,9 +58,37 @@ export const TextBorder = styled.div`
     }
 `;
 
+export const ButtonStyled = styled.button`
+    background: ${props=> props.primary ? '#0033cc' 
+                    : props.attention ? '#ef857d' 
+                    : props.g ? '#d62d20' 
+                    :'#99ccff' };
+    height: 2.5rem;
+    width: 10rem;
+    margin: ${ props => props.margin ? 'auto 1rem' : 'auto'};
+    padding: 0.5rem 2rem;
+    color: white;
+    border-radius: 5px;
+    border: transparent;
+    font-size: 1.3rem;
+    font-family: 'Bubbler One', sans-serif;
+    cursor: pointer;
+
+    &:hover {
+        background: ${props=> props.primary ? '#4169e1' 
+                        : props.fb ? '#8b9dc3'
+                        : '#bedfff' };  
+    }
+    @media (min-width: 768px){
+        height: 2.5rem;
+        width: 10rem;
+    }
+`;
+
 export const ButtonLike = styled.button`
     background: ${props=>props.liked ? '#6699cc' : 'transparent'};
     border: 2px solid #6699cc;
+    border-radius: 5px;
     color: ${props=>props.liked ? '#ffffff' : '#6699cc'};
     font-size: 1.2rem;
     font-family: 'Bubbler One', sans-serif;

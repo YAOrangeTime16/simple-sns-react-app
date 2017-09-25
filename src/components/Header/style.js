@@ -21,7 +21,7 @@ export const HeaderStyled = styled.div`
 export const HeaderUser = styled.div`
 
     height: 3.5rem;
-    background: #dbdbdb;
+    background: #7ea5cc;
     width: 100%;
     font-size: 1.5rem;
     display: flex;
@@ -42,6 +42,7 @@ export const HeaderUser = styled.div`
         padding: .5rem;
         cursor: pointer;
         border: 1px solid white;
+        border-radius: 5px;
         color: white;
     }
 `;

@@ -1,9 +1,13 @@
 import React from 'react';
-import { NoPostsMessage } from './style';
+import { ButtonStyled, StyledText } from './style';
+import { Flexbox } from '../General/style';
 
 function EmptyPost(props){
     return(
-    <NoPostsMessage onClick={props.onOpenPost}><p>Add Your Posts!</p></NoPostsMessage>
+        <Flexbox col onClick={props.onOpenPost}>
+            <StyledText>Post Something!!</StyledText>
+            <ButtonStyled primary>Add Post</ButtonStyled>
+        </Flexbox>
     );
 }
 

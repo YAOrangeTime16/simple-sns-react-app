@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import firebase from '../../firebase';
+import { BackgroundColor} from './style';
+import { Flexbox } from '../General/style';
 
 import CoverContent from './CoverContent';
 import EmptyPost from './EmptyPost';
 import FilteringByUser from './FilteringByUser';
 import SortingByTimestamp from './SortingByTimestamp';
-import { Flexbox } from '../General/style';
 
 //Parent : App.js
 
@@ -107,10 +108,12 @@ class Contents extends Component {
         : <SortingByTimestamp {...this.props}{...this.state} onAddLike={this.onAddLike} onDeleteLike={this.onDeleteLike} />;            
 
         return(
-        <Flexbox col>
-        {this.props.postsArray.length === 0 ? <EmptyPost {...this.props}/> : null}
-        { FilterContents }
-        </Flexbox>
+            <BackgroundColor>
+                <Flexbox col>
+                    {this.props.postsArray.length === 0 ? <EmptyPost {...this.props}/> : null}
+                    { FilterContents }
+                </Flexbox>
+            </BackgroundColor>
         );
     }    
 }
