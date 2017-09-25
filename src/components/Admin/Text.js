@@ -1,11 +1,11 @@
 import React from 'react';
 import { TextArea } from './style';
 
-// Parent : ContentAdmin.js
+// Parent : SortingByTimestamp & FilteredByUser
 
 function Text(props){
     return(
-      <TextArea onChange={props.onChange}/>  
+      <TextArea name="text" onChange={props.onChange}/>  
     );
 }
 

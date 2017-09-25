@@ -1,84 +1,37 @@
 import React, { Component } from 'react';
-import firebase from '../../firebase';
 
 import { Flexbox, Message, CloseButton, Cursor } from './style';
 import Button from './Button';
-//import Message from './Message';
-import Photoloader from './Photoloader';
+import Icon from '../General/Icon';
+import ProgressBarWithToggleChecker from './ProgressBar';
 import Text from './Text';
 
 // Parent : App.js
 
 class Post extends Component {
     
-    state = {
-        text: '',
-        message: ''
-    }
-
-    addPost = (e)=>{
-        e.preventDefault();
-        const d = new Date();
-        const timestamp = d.getTime();
-        
-        const date = [
-            d.getFullYear(),
-            d.getMonth() + 1,
-            d.getDate()
-            ].join( '-' );
-        //get userID, displayName
-        const currentUser = firebase.auth().currentUser;
-        const userID = currentUser.uid;
-        
-        //create a post object to send
-        const postObj = {
-            uid: userID,
-            text: this.state.text,
-            img: null,
-            likes: 0,
-            likedBy: '',
-            timeStamp: timestamp,
-            dateForDisplay: date
-        }
-        
-        if(this.state.text){
-           //add postObj to posts DB
-           const postsRef = firebase.database().ref(`/posts`);
-
-           postsRef.push(postObj)
-           //then add postID to the users database
-            .then((post) => {
-                const usersPostsRef = firebase.database().ref(`users/${postObj.uid}/posts`);
-
-                usersPostsRef.push(post.key)
-                .catch(error => console.log(`failed to add postID: ${error}`));
-               //AND set State to show a message
-               this.setState({message: 'posted!'})
-           })
-            .catch(error => this.setState({ message: error.message}));
-        }
-    }
-    
-    onChangeText = (e)=>{
-        this.setState({text: e.target.value})
-    }
-    
     
     render(){
-        const postButton = this.state.text ? <Button type="submit" {...this.props}/> : '';
+        const postButton = this.props.text ? <Button type="submit" {...this.props}/> : '';
         
         return(
            <div>
             <Cursor onClick={this.props.onClosePost}>
             <CloseButton >Back to Main Page</CloseButton>
-            <Message>{this.state.message}</Message>
+            <Message>{this.props.error}</Message>
             </Cursor>
                
-            <form onSubmit={this.addPost}>
+            <form onSubmit={this.props.addPost}>
                 <Flexbox col>
-                    <Text name="text" onChange={this.onChangeText}/>
-                    <Photoloader />
+                    <Text onChange={this.props.onChange}/>
+                    <label htmlFor="photoIcon">
+                        <Icon p title="Add A Profile Photo"/>
+                        <input type="file" id="photoIcon" onChange={this.props.getPhoto} style={{display: 'none'}} />
+                    </label>
+                    <ProgressBarWithToggleChecker {...this.props} />
+                    {this.props.photofile}
                     { postButton }
+                    
                 </Flexbox>
             </form>
             </div>

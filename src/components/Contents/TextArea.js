@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from '../../firebase';
 import { TextDiv, TextBorder, ContentFlexbox } from './style';
+import PhotoFrame from './PhotoFrame';
 
 // Parent : SortingByTimestamp / FilteringByUser
 
@@ -27,6 +28,7 @@ class TextArea extends Component {
     }
     
     render(){
+        const Pframe = this.props.imgSrc ? <PhotoFrame {...this.props}/> : null;
         return(
             <div>
                 <TextDiv>
@@ -34,16 +36,13 @@ class TextArea extends Component {
                         <div className="name">{this.state.usernameOnPost}</div>
                         <div className="date">{ this.props.dateForDisplay }</div>
                     </ContentFlexbox>
+                    { Pframe }
                     <TextBorder>{this.props.text}</TextBorder>
-                    {this.props.children}
+                    { this.props.children }
                 </TextDiv>
             </div>
-        );
-        
+        );   
     }
-    
-    
 }
-
 
 export default TextArea;

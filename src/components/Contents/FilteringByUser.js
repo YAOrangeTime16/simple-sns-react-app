@@ -47,7 +47,8 @@ class FilteringByUser extends Component {
                         <TextArea
                             text={obj.post.text} 
                             dateForDisplay={obj.post.dateForDisplay} 
-                            userID={ obj.post.uid }>
+                            userID={ obj.post.uid }
+                            imgSrc={obj.post.photoURL}>
                             { buttonComponent }
                         </TextArea>    
                     </div>

@@ -69,11 +69,11 @@ export const InputStyled = styled.input`
 
 export const Message = styled.div`
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #ef857d;
 `;
 
-export const ProgressBar = styled.progress`
+export const Bar = styled.progress`
     margin: 1rem;
 `;

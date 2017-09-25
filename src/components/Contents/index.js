@@ -119,7 +119,7 @@ class Contents extends Component {
 }
 
 const withLoginCheck = (UserContent)=>(props)=>{
-    return props.loginStatus ? <UserContent {...props}/> : <CoverContent />;
+    return props.loginStatus ? <UserContent {...props}/> : <CoverContent {...props}/>;
 };
 
 const ContentsWithLoginCheck = withLoginCheck(Contents);

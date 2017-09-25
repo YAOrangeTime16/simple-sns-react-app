@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //---- Styles
-import { ButtonStyled, CloseButton, InputStyled, Link } from './style';
+import { ButtonStyled, CloseButton, InputStyled, Link, Message } from './style';
 import { Flexbox } from '../General/style';
 //---- Component Files
 
@@ -30,7 +30,7 @@ class Login extends Component {
                         
                         onChange={this.props.onChange}/>
                     <ButtonStyled primary type="submit">Login</ButtonStyled>
-                    <p>{ errorMessage }</p>
+                    <Message>{ errorMessage }</Message>
                     <ButtonStyled g onClick={this.props.onLoginWithGoogle}>with Google</ButtonStyled>
 
                 <Link attention bold>

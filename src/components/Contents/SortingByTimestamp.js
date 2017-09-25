@@ -45,13 +45,14 @@ class SortingByTimestamp extends Component {
                     likes={obj.post.likes}
                     postID={obj.key} />
             : <div>please login</div>;
-            
+                
              return (<div key={obj.key}>
                     <TextArea
                        {...this.props.user}
                         text={obj.post.text} 
-                        dateForDisplay={obj.post.dateForDisplay} 
-                        userID={ obj.post.uid }>
+                        dateForDisplay={obj.post.dateForDisplay}
+                        userID={ obj.post.uid }
+                        imgSrc={obj.post.photoURL}>
                         { buttonComponent }
                     </TextArea>
                 </div>) 

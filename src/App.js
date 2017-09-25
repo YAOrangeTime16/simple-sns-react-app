@@ -19,6 +19,8 @@ class App extends Component {
         toggleAdmin: 0,
         modalMenu: false,
         error: '',
+        text: '',
+        message: '',
         //check login
         password: '',
         email:'',
@@ -32,8 +34,9 @@ class App extends Component {
         //photoURL: null,
         photoObj: '',
         photofile: null,
+        photoURL: null,
         uploaded: 0,
-        profileloader: false,
+        photoloader: false,
         //Contents
         filteringChecked: false,
     }
@@ -113,7 +116,6 @@ class App extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
     
-    
     onClosePost = ()=>{
         this.setState({ toggleAdmin: 0, modalMenu: false})
     }
@@ -137,7 +139,7 @@ class App extends Component {
     onModalOff = (e)=>{
         e.preventDefault();
         document.getElementById('loginForm').reset();
-        this.setState({ triggerModal: false, loginType: true });
+        this.setState({ triggerModal: false, loginType: true, error: '' });
     }
     
     onModalMenuOff=(e)=>{
@@ -150,7 +152,7 @@ class App extends Component {
     }
     
     onSwitchUserType = () =>{
-        this.setState({loginType: !this.state.loginType});
+        this.setState({loginType: !this.state.loginType, error: ''});
     }
     
     onFilteringCheck =(e)=>{
@@ -222,45 +224,40 @@ class App extends Component {
         const userInfo = firebase.auth().currentUser;
         const userDBref = firebase.database().ref(`users/${userInfo.uid}`);
         
-        if(this.state.photoObj){  //---startif
+        if(this.state.photoObj){  //IF there is a photo to upload...
             const metadata = {
                 contentType: 'image/jpeg',
             };
             
-            this.setState({ profileloader: true})
+            this.setState({ photoloader: true})
             
             const uploadFile = firebase.storage().ref(`profilePhotos/${userInfo.uid}`).put(this.state.photoObj, metadata);
         
-            uploadFile.on('state_changed', (snapshot)=>{
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                if(progress === 100) {
-                    this.setState(
-                        { 
-                            toggleAdmin: 0, 
-                            profileloader: false, 
-                            photofile: null 
-                        }
-                    )
-                } else {
-                    console.log('Uploading...');
-                    this.setState({ uploaded: progress})
-                }
-            } )
-        
-            uploadFile.then( (snapshot) =>{ 
-                const photoURL = snapshot.metadata.downloadURLs[0];
-                const photoURLData = {photoURL: photoURL}
-
-                //Update profile on firebase auth
-                userInfo.updateProfile(photoURLData).then( ()=>{
-                    //update state
-                    const newUserObj = Object.assign({}, this.state.user, photoURLData);
-                    this.setState({ user: newUserObj })
-                // also update on firebase database
-                userDBref.update(photoURLData)
-                })
-            })
-        } //--endif(photoObj)
+            uploadFile.on('state_changed', 
+                (snapshot)=>{
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Uploading...');
+                        this.setState({ uploaded: progress})
+                }, 
+                (error)=>{}, //error
+                ()=>{
+                    this.setState({ 
+                        toggleAdmin: 0, 
+                        photoloader: false, 
+                        photofile: null 
+                    });
+                    const photoURL = uploadFile.snapshot.downloadURL;
+                    const photoURLData = {photoURL: photoURL};
+                    //Update profile on firebase auth
+                    userInfo.updateProfile(photoURLData).then( ()=>{
+                        //update state
+                        const newUserObj = Object.assign({}, this.state.user, photoURLData);
+                        this.setState({ user: newUserObj })
+                        // also update on firebase database
+                        userDBref.update(photoURLData)
+                    })
+                }); //success
+        }; //--endif(photoObj)
 
         //if new username was empty : use the current username
         //if new username has new input : use this new username
@@ -286,15 +283,125 @@ class App extends Component {
         })
         
         if(!this.state.photoObj){
-           this.setState({ toggleAdmin: 0, profileloader: false })
+           this.setState({ toggleAdmin: 0, photoloader: false })
         }
 
+    };
+    
+    addPost = (e)=>{
+        e.preventDefault();
+        const d = new Date();
+        const timestamp = d.getTime();
+        
+        const date = [
+            d.getFullYear(),
+            d.getMonth() + 1,
+            d.getDate()
+            ].join( '-' );
+        //get userID, displayName
+        const currentUser = firebase.auth().currentUser;
+        const userID = currentUser.uid;
+        //Bool : photoObj
+        
+        
+        if(this.state.photoObj){ //IF there is a photo to upload...
+            //upload a photo to Storage
+            const metadata = {
+                contentType: 'image/jpeg',
+            };
+            
+            this.setState({ photoloader: true})
+            
+            const uploadFile = firebase.storage().ref(`postPhotos/${timestamp}`).put(this.state.photoObj, metadata);
+        
+            uploadFile.on('state_changed', 
+                (snapshot)=>{
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Uploading...');
+                    this.setState({ uploaded: progress})
+                }, 
+                (error)=>{this.setState({error: error.message})}, //error
+                ()=>{
+                console.log(`photo uploaded: ${uploadFile.snapshot.downloadURL}`);
+                    this.setState({ 
+                        toggleAdmin: 0, 
+                        photoloader: false, 
+                        photofile: null,
+                        photoObj: ''
+                    });
+                
+                
+                
+                //create a post object to send
+                const postObj = {
+                    uid: userID,
+                    text: this.state.text,
+                    photoURL: uploadFile.snapshot.downloadURL,
+                    likes: 0,
+                    likedBy: '',
+                    timeStamp: timestamp,
+                    dateForDisplay: date
+                };
+        
+                    if(this.state.text){
+                       //add a post to DB 'posts'
+                       const postsRef = firebase.database().ref(`/posts`);
+
+                       postsRef.push(postObj)
+                       //then add postID to the users database
+                        .then((post) => {
+                            const usersPostsRef = firebase.database().ref(`users/${postObj.uid}/posts`);
+
+                            usersPostsRef.push(post.key)
+                            .catch(error => console.log(`failed to add postID: ${error}`));
+                       })
+                        .catch(error => this.setState({ error: error.message}));
+
+                    }//---endof if
+                
+                }) //success
+        } else {
+            
+            //create a post object to send
+            const postObj = {
+                uid: userID,
+                text: this.state.text,
+                likes: 0,
+                likedBy: '',
+                timeStamp: timestamp,
+                dateForDisplay: date
+            };
+
+            if(this.state.text){
+               //add a post to DB 'posts'
+               const postsRef = firebase.database().ref(`/posts`);
+
+               postsRef.push(postObj)
+               //then add postID to the users database
+                .then((post) => {
+                    const usersPostsRef = firebase.database().ref(`users/${postObj.uid}/posts`);
+
+                    usersPostsRef.push(post.key)
+                    .catch(error => console.log(`failed to add postID: ${error}`));
+                   //AND close the page
+                   this.setState({ toggleAdmin: 0, modalMenu: false})
+               })
+                .catch(error => this.setState({ error: error.message}));
+
+            }//---endof if text
+        }; //--- endof IF
+        
+        
     }
+    
     
   render() {
     const toggleContents = (this.state.toggleAdmin === 1) 
         ? <Post {...this.state}
-            onClosePost={this.onClosePost}/>
+            onClosePost={this.onClosePost}
+            onChange={this.onChange}
+            getPhoto={this.getPhoto}
+            addPost={this.addPost}/>
         : (this.state.toggleAdmin === 2) 
         ? <Profile {...this.state}
             onCloseProfile={this.onCloseProfile}
@@ -302,7 +409,9 @@ class App extends Component {
             changeProfile={this.changeProfile}
             getPhoto={this.getPhoto}/>
         : <ContentsWithLoginCheck {...this.state} onToggleLike={this.onToggleLike}
-        onOpenPost={this.onOpenPost}/>
+        onOpenPost={this.onOpenPost}
+        onModalShow={this.onModalShow}
+        userType={ this.onSwitchUserType }/>
     
     return (
       <Webpage>
@@ -327,7 +436,7 @@ class App extends Component {
             onLoginWithGoogle={this.onLoginWithGoogle}
             
             loginType={ this.state.loginType }
-            userType = { this.onSwitchUserType } />
+            userType={ this.onSwitchUserType } />
         { toggleContents }
       </Webpage>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'react-image-resizer';
 import { Flexbox, CloseButton, InputStyled, Cursor } from './style';
 import Button from './Button';
-import ProfilePhotoloaderWithToggleChecker from './ProfilePhotoloader'
+import ProgressBarWithToggleChecker from './ProgressBar';
 
 import Icon from '../General/Icon';
 
@@ -35,7 +35,7 @@ function Profile (props){
                     <input type="file" id="photoButton" onChange={props.getPhoto} style={{display: 'none'}} />
 
                     </label>
-                    <ProfilePhotoloaderWithToggleChecker {...props} />
+                    <ProgressBarWithToggleChecker {...props} />
                     <Button />
                 </Flexbox>
             </form>

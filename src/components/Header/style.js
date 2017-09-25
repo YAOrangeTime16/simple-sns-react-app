@@ -179,3 +179,9 @@ export const ModalOverlay = styled.div`
 	height:120%;
 	background-color:rgba(153, 204, 255, 0.8);
 `;
+
+export const Message = styled.p`
+    text-align: center;
+    font-size: 1rem;
+    color: #ef857d;
+`;

@@ -48,6 +48,14 @@ export const TextDiv = styled.div`
     }
 `;
 
+export const Frame = styled.div`
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px #808080;
+    margin: 1.5rem auto .5rem auto;
+    padding: 0 1rem;
+`;
+
 export const TextBorder = styled.div`
     border-bottom: .5px solid #6699cc;
     width: 100%;
