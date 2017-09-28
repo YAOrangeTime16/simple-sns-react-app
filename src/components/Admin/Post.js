@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { Flexbox, Message, CloseButton, Cursor } from './style';
 import Button from './Button';
@@ -8,35 +8,28 @@ import Text from './Text';
 
 // Parent : App.js
 
-class Post extends Component {
-    
-    
-    render(){
-        const postButton = this.props.text ? <Button type="submit" {...this.props}/> : '';
-        
+function Post(props) {
         return(
            <div>
-            <Cursor onClick={this.props.onClosePost}>
+            <Cursor onClick={props.onClosePost}>
             <CloseButton >Back to Main Page</CloseButton>
-            <Message>{this.props.error}</Message>
+            <Message>{props.error}</Message>
             </Cursor>
                
-            <form onSubmit={this.props.addPost}>
+            <form onSubmit={props.addPost}>
                 <Flexbox col>
-                    <Text onChange={this.props.onChange}/>
+                    <Text onChange={props.onChange}/>
                     <label htmlFor="photoIcon">
                         <Icon p title="Add A Profile Photo"/>
-                        <input type="file" id="photoIcon" onChange={this.props.getPhoto} style={{display: 'none'}} />
+                        <input type="file" id="photoIcon" onChange={props.getPhoto} style={{display: 'none'}} />
                     </label>
-                    <ProgressBarWithToggleChecker {...this.props} />
-                    {this.props.photofile}
-                    { postButton }
-                    
+                    <ProgressBarWithToggleChecker {...props} />
+                    {props.photofile}
+                    { props.text ? <Button type="submit" {...props}/> : '' }   
                 </Flexbox>
             </form>
             </div>
         );
-    }
 }
 
 export default Post;

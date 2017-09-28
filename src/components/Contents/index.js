@@ -5,13 +5,14 @@ import { Flexbox } from '../General/style';
 
 import CoverContent from './CoverContent';
 import EmptyPost from './EmptyPost';
-import FilteringByUser from './FilteringByUser';
-import SortingByTimestamp from './SortingByTimestamp';
+import FilteringContents from './FilteringContents';
 
 //Parent : App.js
 
 class Contents extends Component {
-    state={}
+    state = {
+        contentFilter: 0
+    }
 
     onAddLike =(e)=>{
         //get current "userID"
@@ -26,7 +27,6 @@ class Contents extends Component {
             const likedByObjArray = snapshot.val();
             
             //send userID to the "postID"/likedBy
-            
             const AddLike =()=>{ 
                 const likedInfo = {
                     userID: userID
@@ -44,28 +44,20 @@ class Contents extends Component {
                 .catch(error => {console.log(`failed to add like: ${error.message}`)});
             })};
             
-
-            
             if(likedByObjArray){
                 for(let key in likedByObjArray){
-                
                     if(likedByObjArray[key].userID===userID){
                         console.log('you have already liked');
                         return false;   
                     }
-                    
                 } //---end of forIn
                 AddLike();
                 UpdateLikes();
-                console.log('your like added');
             } else {
                 AddLike();
                 UpdateLikes();
-                console.log('your like added');
             }
-            
         });
-        
     }
     
     onDeleteLike =(e)=>{
@@ -87,13 +79,11 @@ class Contents extends Component {
                     likedRef.remove()
                     .catch(error => {console.log(`failed to remove "liked" ${error}`)});
                     
-                    //UpdateLikes!!
-                    //get the current likes
+                    //UPDATE LIKES
                     postRef.child(`likes`).once('value', snapshot=>{
                     const currentLikes = snapshot.val();
-                    //remove 1 from the value
                     const newLikesNumber= currentLikes - 1;
-                    //sendNewValue to DB
+                    //send NewValue to DB
                     postRef.child(`likes`).set(newLikesNumber)
                     .catch(error => {console.log(`failed to add like: ${error}`)});
                     })
@@ -101,19 +91,37 @@ class Contents extends Component {
             }//--- endof forIn
         })
     }
+    
+    onDeletePost=(postId, userId)=>{
+        const postID = postId;
+        const userID = userId;
+        const postRef = firebase.database().ref(`posts/${postID}`);
+        const userPostRef = firebase.database().ref(`users/${userID}/posts`)
+        userPostRef.once('value', snapshot => {
+            const usersPosts = snapshot.val();
+            for(let key in usersPosts){
+                if(usersPosts[key] === postID){
+                    userPostRef.child(key).remove();
+                }
+            }
+        })
+        postRef.remove();
+    }
         
     render(){
-        const FilterContents = this.props.filteringChecked 
-        ? <FilteringByUser {...this.props}{...this.state} onAddLike={this.onAddLike} onDeleteLike={this.onDeleteLike} />
-        : <SortingByTimestamp {...this.props}{...this.state} onAddLike={this.onAddLike} onDeleteLike={this.onDeleteLike} />;            
-
         return(
+            <div>
             <BackgroundColor>
                 <Flexbox col>
                     {this.props.postsArray.length === 0 ? <EmptyPost {...this.props}/> : null}
-                    { FilterContents }
+                    <FilteringContents 
+                        onDeletePost={this.onDeletePost}
+                        onDeleteLike={this.onDeleteLike}
+                        onAddLike={this.onAddLike}
+                        {...this.props} />
                 </Flexbox>
             </BackgroundColor>
+            </div>
         );
     }    
 }

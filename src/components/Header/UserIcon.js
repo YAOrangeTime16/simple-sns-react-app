@@ -10,8 +10,7 @@ function UserIcon(props){
         <div>
            <Image 
             src={ props.user.photoURL }
-            alt="photo"
-            noImageAlt="no image"
+            alt=""
             width={50}
             height={50}
             style={{ margin: '1rem'}}

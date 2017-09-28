@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import firebase from '../../firebase';
 import { TextDiv, TextBorder, ContentFlexbox } from './style';
 import PhotoFrame from './PhotoFrame';
+import DeleteIconWithUserChecker from './DeleteIcon';
 
 // Parent : SortingByTimestamp / FilteringByUser
 
@@ -37,7 +38,7 @@ class TextArea extends Component {
                         <div className="date">{ this.props.dateForDisplay }</div>
                     </ContentFlexbox>
                     { Pframe }
-                    <TextBorder>{this.props.text}</TextBorder>
+                    <TextBorder>{this.props.text}<DeleteIconWithUserChecker {...this.props}/></TextBorder>
                     { this.props.children }
                 </TextDiv>
             </div>

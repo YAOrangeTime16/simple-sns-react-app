@@ -5,15 +5,15 @@ import { Webpage } from './components/General/style';
 //--- component files
 import ContentsWithLoginCheck from './components/Contents';
 import Header from './components/Header';
+import Loader from './components/General/Loader';
 import ModalwithTriggerCheck from './components/Header/Modal';
 import Post from './components/Admin/Post';
 import Profile from './components/Admin/Profile';
 
-
 class App extends Component {
     
     state= {
-        //only for interface
+        //interface
         triggerModal: false,
         loginType: true,
         toggleAdmin: 0,
@@ -21,6 +21,7 @@ class App extends Component {
         error: '',
         text: '',
         message: '',
+        loading: true,
         //check login
         password: '',
         email:'',
@@ -29,16 +30,17 @@ class App extends Component {
         postsArray: [],
         user: '',
         loginStatus: false,
-        //Profile
+        //Profile & Post
         username: '',
-        //photoURL: null,
         photoObj: '',
         photofile: null,
-        photoURL: null,
+        //photoURL: null,
         uploaded: 0,
         photoloader: false,
         //Contents
-        filteringChecked: false,
+        userFilter: false,
+        likesFilter: false,
+        latestFirst: "1"
     }
     
     //------- For ComponentDidMount
@@ -81,10 +83,20 @@ class App extends Component {
         })
     }
     
+    RemoveContent=()=>{
+        firebase.database().ref(`posts`)
+        .on('child_removed', snapshot =>{
+            let removedContent = [...this.state.postsArray];
+            const filterContents = removedContent.filter(change => 
+                    change.key !== snapshot.key
+            )
+            this.setState({ postsArray : filterContents })
+        })
+    }
+    
     LoginCheck=()=>{
         firebase.auth().onAuthStateChanged( user => {
             if(user){
-                
                 this.setState({loginStatus: true, triggerModal: false})
                 
                 const userObj = {
@@ -94,7 +106,7 @@ class App extends Component {
                     photoURL: user.photoURL
                 }
                 this.setState({user: userObj});
-                console.log('logged in' + user.uid);
+                console.log('logged in as: ' + user.uid);
                 
             } else {
                     this.setState({loginStatus: false, user: ''})
@@ -107,7 +119,9 @@ class App extends Component {
         this.AddNewPost();
         this.UpdateContent();
         this.UpdateUser();
+        this.RemoveContent();
         this.LoginCheck();
+        setTimeout(()=>this.setState({loading: false}), 2000);
     }
 
     //----- Other Methods
@@ -125,11 +139,11 @@ class App extends Component {
     }
     
     onOpenPost=()=>{
-        this.setState({ toggleAdmin: 1, modalMenu: false })
+        this.setState({ toggleAdmin: 1, modalMenu: false, userFilter: false, likesFilter: false })
     }
     
     onOpenProfile =()=>{
-        this.setState({ toggleAdmin: 2, modalMenu: false })
+        this.setState({ toggleAdmin: 2, modalMenu: false, userFilter: false, likesFilter: false })
     }
     
     onModalShow = ()=>{
@@ -156,7 +170,7 @@ class App extends Component {
     }
     
     onFilteringCheck =(e)=>{
-        this.setState({ filteringChecked: e.target.checked});
+        this.setState({ [e.target.name]: e.target.checked});
     }
     
     onLogin = (e)=>{
@@ -189,7 +203,7 @@ class App extends Component {
                 {
                     uid: user.uid,
                     email: user.email,
-                    username: 'No Name'
+                    username: ''
                 })
             }).then(()=>{ this.setState({loginType: true, error: '' }); }).catch( (
                 error) =>{ this.setState({error: error.message}) })
@@ -209,8 +223,15 @@ class App extends Component {
     onSignout = (e)=>{
         e.preventDefault();
         firebase.auth().signOut()
-            .then(()=>{this.setState({ modalMenu: false, toggleAdmin: 0 })})
-            .catch(error => console.log(error.message))
+        .then(()=>{this.setState({ 
+                modalMenu: false, 
+                toggleAdmin: 0,
+                userFilter: false,
+                likesFilter: false,
+                latestFirst: "1"
+            })
+        })
+        .catch(error => console.log(error.message))
     }
     
     getPhoto =(e)=>{
@@ -236,15 +257,18 @@ class App extends Component {
             uploadFile.on('state_changed', 
                 (snapshot)=>{
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Uploading...');
                         this.setState({ uploaded: progress})
                 }, 
-                (error)=>{}, //error
-                ()=>{
+/* Error */     (error)=>{
+                    this.setState({ error: error.message });
+                    console.log(error);
+                },
+/* Success */   ()=>{
                     this.setState({ 
                         toggleAdmin: 0, 
                         photoloader: false, 
-                        photofile: null 
+                        photofile: null,
+                        photoObj: ''
                     });
                     const photoURL = uploadFile.snapshot.downloadURL;
                     const photoURLData = {photoURL: photoURL};
@@ -256,13 +280,12 @@ class App extends Component {
                         // also update on firebase database
                         userDBref.update(photoURLData)
                     })
-                }); //success
+                });
         }; //--endif(photoObj)
 
         //if new username was empty : use the current username
         //if new username has new input : use this new username
         const useThisName = this.state.username ? this.state.username : this.state.user.username ? this.state.user.username : '';
-        console.log(`useThisName : ${useThisName}`)
         
         const newProfileToAuth = {
             displayName: useThisName
@@ -298,11 +321,9 @@ class App extends Component {
             d.getMonth() + 1,
             d.getDate()
             ].join( '-' );
-        //get userID, displayName
+
         const currentUser = firebase.auth().currentUser;
-        const userID = currentUser.uid;
-        //Bool : photoObj
-        
+        const userID = currentUser.uid;    
         
         if(this.state.photoObj){ //IF there is a photo to upload...
             //upload a photo to Storage
@@ -317,31 +338,27 @@ class App extends Component {
             uploadFile.on('state_changed', 
                 (snapshot)=>{
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Uploading...');
                     this.setState({ uploaded: progress})
+                console.log(`uploading: ${progress}`);
                 }, 
-                (error)=>{this.setState({error: error.message})}, //error
-                ()=>{
-                console.log(`photo uploaded: ${uploadFile.snapshot.downloadURL}`);
+/* Error */     (error)=>{this.setState({error: error.message})},
+/* Success */   ()=>{
                     this.setState({ 
                         toggleAdmin: 0, 
                         photoloader: false, 
                         photofile: null,
                         photoObj: ''
                     });
-                
-                
-                
-                //create a post object to send
-                const postObj = {
-                    uid: userID,
-                    text: this.state.text,
-                    photoURL: uploadFile.snapshot.downloadURL,
-                    likes: 0,
-                    likedBy: '',
-                    timeStamp: timestamp,
-                    dateForDisplay: date
-                };
+                    //create a post object to send
+                    const postObj = {
+                        uid: userID,
+                        text: this.state.text,
+                        photoURL: uploadFile.snapshot.downloadURL,
+                        likes: 0,
+                        likedBy: '',
+                        timeStamp: timestamp,
+                        dateForDisplay: date
+                    };
         
                     if(this.state.text){
                        //add a post to DB 'posts'
@@ -358,10 +375,8 @@ class App extends Component {
                         .catch(error => this.setState({ error: error.message}));
 
                     }//---endof if
-                
-                }) //success
-        } else {
-            
+                })
+        } else {    
             //create a post object to send
             const postObj = {
                 uid: userID,
@@ -382,20 +397,17 @@ class App extends Component {
                     const usersPostsRef = firebase.database().ref(`users/${postObj.uid}/posts`);
 
                     usersPostsRef.push(post.key)
-                    .catch(error => console.log(`failed to add postID: ${error}`));
+                    .catch(error => console.log(`failed to add postID: ${error.message}`));
                    //AND close the page
                    this.setState({ toggleAdmin: 0, modalMenu: false})
                })
                 .catch(error => this.setState({ error: error.message}));
-
             }//---endof if text
         }; //--- endof IF
-        
-        
     }
     
-    
   render() {
+
     const toggleContents = (this.state.toggleAdmin === 1) 
         ? <Post {...this.state}
             onClosePost={this.onClosePost}
@@ -411,10 +423,14 @@ class App extends Component {
         : <ContentsWithLoginCheck {...this.state} onToggleLike={this.onToggleLike}
         onOpenPost={this.onOpenPost}
         onModalShow={this.onModalShow}
-        userType={ this.onSwitchUserType }/>
-    
-    return (
-      <Webpage>
+        userType={ this.onSwitchUserType }/>;
+      
+      if(this.state.loading){
+          return <Loader />
+      }
+      
+      return (
+        <Webpage>
         <Header {...this.state}
            onFilteringCheck={this.onFilteringCheck}
             onModalShow={this.onModalShow}
@@ -423,7 +439,8 @@ class App extends Component {
             onOpenPost={this.onOpenPost}
             onOpenProfile={this.onOpenProfile}
             onClosePost={this.onClosePost}
-            onCloseProfile={this.onCloseProfile} 
+            onCloseProfile={this.onCloseProfile}
+            onChange={this.onChange} 
             onSignout={this.onSignout}
              />
         <ModalwithTriggerCheck 
@@ -434,12 +451,11 @@ class App extends Component {
             triggerModal={this.state.triggerModal}
             onModalOff={this.onModalOff}
             onLoginWithGoogle={this.onLoginWithGoogle}
-            
             loginType={ this.state.loginType }
             userType={ this.onSwitchUserType } />
         { toggleContents }
       </Webpage>
-    );
+      );
   }
 }
 

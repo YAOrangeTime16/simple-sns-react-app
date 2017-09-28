@@ -72,13 +72,13 @@ export const ButtonStyled = styled.button`
                     : props.g ? '#d62d20' 
                     :'#99ccff' };
     height: 2.5rem;
-    width: 10rem;
+    width: 9rem;
     margin: ${ props => props.margin ? 'auto 1rem' : 'auto'};
     padding: 0.5rem 2rem;
     color: white;
     border-radius: 5px;
     border: transparent;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-family: 'Bubbler One', sans-serif;
     cursor: pointer;
 
@@ -114,4 +114,33 @@ export const StyledCounter = styled.div`
     color: #ef857d;
     font-size: 1rem;
     margin: 1rem .5rem 0 .5rem;
+`;
+
+export const ModalContent = styled.div`
+	z-index:10;
+    width: 80%;
+	margin: 7rem auto;
+	padding: 1.5rem;
+	border:none;
+    border-radius: 5px;
+	background:#fff;
+    position: fixed;
+
+    @media (min-width: 768px){
+        width:50%;
+    }
+    
+`;
+
+export const ModalOverlay = styled.div`
+    z-index:5;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:120%;
+	background-color:rgba(153, 204, 255, 0.8);
 `;

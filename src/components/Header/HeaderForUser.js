@@ -5,10 +5,18 @@ function HeaderForUser(props){
     return(
         <div>
         <HeaderUser>
-        <input type="checkbox" id="check" value={!props.filteringChecked} onClick={props.onFilteringCheck} />
-        <label htmlFor="check" >Only My Posts</label>
-        </HeaderUser>
+        <div>
+            <input type="radio" id="radio1" name="latestFirst" value="1" onClick={props.onChange} defaultChecked />
+            <label htmlFor="radio1" className="radiobutton">Latest</label>
+            <input type="radio" id="radio2" name="latestFirst" value="0" onClick={props.onChange} />
+            <label htmlFor="radio2" className="radiobutton">Oldest</label>
+        </div>
         
+        <input type="checkbox" id="check" name="userFilter" onClick={props.onFilteringCheck} />
+        <label htmlFor="check" className="checkbox">Only My Posts</label>
+        <input type="checkbox" id="likes" name="likesFilter"  onClick={props.onFilteringCheck} />
+        <label htmlFor="likes" className="checkbox">Most Likes</label>
+        </HeaderUser>
         </div>
     );
     

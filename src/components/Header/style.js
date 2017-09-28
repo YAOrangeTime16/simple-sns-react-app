@@ -23,27 +23,56 @@ export const HeaderUser = styled.div`
     height: 3.5rem;
     background: #7ea5cc;
     width: 100%;
-    font-size: 1.5rem;
+    font-size: 1rem;
     display: flex;
     align-content: center;
+    justify-content: center;
 
     >input[type=checkbox] {
         display: none;
 
         &:checked + label{
-            background: blue;
+            background: #ef857d;
         }
     }
 
-    >label{
+    >div {
+        display: flex;
+        justify-content: center;
+        margin: auto .5rem;
+        border: 1px solid white;
+        border-radius: 5px;
+    }
+
+    >div input[type=radio] {
+        display: none;
+
+        &:checked + label{
+            background: blue;
+            border-radius: 5px;
+        }
+    }
+
+    >div label.radiobutton{
         width: fit-content;
         text-align: center;
-        margin: auto;
+        padding: .5rem;
+        color: white;
+    }
+
+    >label.checkbox{
+        width: fit-content;
+        text-align: center;
+        margin: auto 1rem;
         padding: .5rem;
         cursor: pointer;
         border: 1px solid white;
         border-radius: 5px;
         color: white;
+    }
+
+    @media (min-width: 768px){
+        font-size: 1.5rem;
     }
 `;
 
@@ -95,6 +124,7 @@ export const ButtonStyled = styled.button`
     padding: 0.5rem 2rem;
     color: white;
     border: 2px solid white;
+    border-radius: 5px;
     font-size: 1.3rem;
     font-family: 'Bubbler One', sans-serif;
     cursor: pointer;
