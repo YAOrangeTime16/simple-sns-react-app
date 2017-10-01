@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 //---- Styles
-import { Flexbox } from '../General/style';
 import { ModalContent, ModalOverlay } from './style';
 //---- Component Files
 import Login from './Login';

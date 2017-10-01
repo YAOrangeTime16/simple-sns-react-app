@@ -1,81 +1,35 @@
-import React, { Component } from 'react';
-import firebase from '../../firebase';
+import React from 'react';
 
-import { Flexbox, Message, CloseButton } from './style';
+import { Flexbox, Message, CloseButton, Cursor } from './style';
 import Button from './Button';
-//import Message from './Message';
-import Photoloader from './Photoloader';
+import Icon from '../General/Icon';
+import ProgressBarWithToggleChecker from './ProgressBar';
 import Text from './Text';
 
 // Parent : App.js
 
-class Post extends Component {
-    
-    state = {
-        text: '',
-        message: ''
-    }
-
-    ComponentDidMount(){
-
-    }
-
-    addPost = (e)=>{
-        e.preventDefault();
-        const d = new Date();
-        const timestamp = d.getTime();
-        
-        const date = [
-            d.getFullYear(),
-            d.getMonth() + 1,
-            d.getDate()
-            ].join( '-' );
-        
-        const postObj = {
-            uid: this.props.user.uid,
-            userName: this.props.user.displayName,
-            text: this.state.text,
-            img: null,
-            likes: 0,
-            likedBy: '',
-            postId: timestamp,
-            dateForDisplay: date
-        }
-        
-   if(this.state.text){
-       firebase.database().ref(`/posts`).push(postObj)
-           .then(
-           this.setState({message: 'posted'})
-           ).catch(error => this.setState({ message: error}));
-       
-   } else {
-       this.setState({message: 'Please fill in'})
-   }
-    }
-    
-    onChangeText = (e)=>{
-        this.setState({text: e.target.value})
-    }
-    
-    
-    render(){
-        const postButton = this.state.text ? <Button type="submit" {...this.props}/> : '';
-        
+function Post(props) {
         return(
            <div>
-            <CloseButton onClick={this.props.onClosePost}>Back to Main Page</CloseButton>
-            <Message>{this.state.message}</Message>
+            <Cursor onClick={props.onClosePost}>
+            <CloseButton >Back to Main Page</CloseButton>
+            <Message>{props.error}</Message>
+            </Cursor>
                
-            <form onSubmit={this.addPost}>
+            <form onSubmit={props.addPost}>
                 <Flexbox col>
-                    <Text name="text" onChange={this.onChangeText}/>
-                    <Photoloader />
-                    { postButton }
+                    <Text onChange={props.onChange}/>
+                    <label htmlFor="photoIcon">
+                        <Icon p title="Add A Profile Photo"/>
+                        <input type="file" id="photoIcon" onChange={props.getPhoto} style={{display: 'none'}} />
+                    </label>
+                    <ProgressBarWithToggleChecker {...props} />
+                    {props.photofile}
+                    { props.text ? <Button type="submit" {...props}/> : '' }   
                 </Flexbox>
             </form>
             </div>
         );
-    }
 }
 
 export default Post;

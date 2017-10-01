@@ -1,11 +1,17 @@
 import styled from 'styled-components';
 
 //---- Header style ----------------------
+export const HeaderFlexbox = styled.div`
+    display: flex;
+    cursor: pointer;
+    flex-direction: row;
+    align-content: center;
+`;
 
 export const HeaderStyled = styled.div`
     background: #6699cc;
     margin: 0;
-    width: 100vw;
+    width: 100%;
     height: 5rem;
     display: flex;
     flex-direction: row;
@@ -13,37 +19,83 @@ export const HeaderStyled = styled.div`
 `;
 
 export const HeaderUser = styled.div`
-    width: 100vw;
+
     height: 3.5rem;
-    background: #dbdbdb;
-    color: white;
-    font-size: 1.5rem;
+    background: #7ea5cc;
+    width: 100%;
+    font-size: 1rem;
     display: flex;
     align-content: center;
+    justify-content: center;
 
-    >div{
+    >input[type=checkbox] {
+        display: none;
+
+        &:checked + label{
+            background: #ef857d;
+        }
+    }
+
+    >div {
+        display: flex;
+        justify-content: center;
+        margin: auto .5rem;
+        border: 1px solid white;
+        border-radius: 5px;
+    }
+
+    >div input[type=radio] {
+        display: none;
+
+        &:checked + label{
+            background: blue;
+            border-radius: 5px;
+        }
+    }
+
+    >div label.radiobutton{
         width: fit-content;
         text-align: center;
-        margin: auto;
+        padding: .5rem;
+        color: white;
+    }
+
+    >label.checkbox{
+        width: fit-content;
+        text-align: center;
+        margin: auto 1rem;
         padding: .5rem;
         cursor: pointer;
         border: 1px solid white;
-}
+        border-radius: 5px;
+        color: white;
+    }
+
+    @media (min-width: 768px){
+        font-size: 1.5rem;
+    }
 `;
+
 export const Logo = styled.div`
-    font-size: 3rem;
+    font-size: 2rem;
     font-family: 'Bubbler One', sans-serif;
     margin: auto auto auto 2rem;
     color: white;
+    @media (min-width: 768px){
+        font-size: 3rem;
+    }
 `;
 
-export const UserName = styled.div`
-    font-size: 1.5rem; 
+export const StyledUserName = styled.div`
+    font-size: 1.3rem; 
     margin: auto 0;
+    @media (min-width: 768px){
+        font-size: 1.5rem;
+    }
     
 `;
 
-export const UserNameCursor = styled(UserName)`
+export const UserNameCursor = styled(StyledUserName)`
     cursor: pointer;
 `;
 
@@ -64,7 +116,7 @@ export const StyledIcon = styled.div`
 export const ButtonStyled = styled.button`
     background: ${props=> props.primary ? '#0033cc' 
                     : props.attention ? '#ef857d' 
-                    : props.fb ? '#3b5998' 
+                    : props.g ? '#d62d20' 
                     :'#99ccff' };
     height: 2.5rem;
     width: 10rem;
@@ -72,6 +124,7 @@ export const ButtonStyled = styled.button`
     padding: 0.5rem 2rem;
     color: white;
     border: 2px solid white;
+    border-radius: 5px;
     font-size: 1.3rem;
     font-family: 'Bubbler One', sans-serif;
     cursor: pointer;
@@ -155,4 +208,10 @@ export const ModalOverlay = styled.div`
 	width:100%;
 	height:120%;
 	background-color:rgba(153, 204, 255, 0.8);
+`;
+
+export const Message = styled.p`
+    text-align: center;
+    font-size: 1rem;
+    color: #ef857d;
 `;

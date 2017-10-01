@@ -14,7 +14,8 @@ function UserMenu (props) {
                <Flexbox col>
                 <LinkBordered bold 
                 onClick={props.onOpenPost}>Post</LinkBordered>
-                <LinkBordered bold>User Settings</LinkBordered>
+                <LinkBordered bold
+                onClick={props.onOpenProfile}>User Settings</LinkBordered>
                 <LinkBordered bold 
                 onClick={props.onSignout}>Logout</LinkBordered>
                 </Flexbox>
