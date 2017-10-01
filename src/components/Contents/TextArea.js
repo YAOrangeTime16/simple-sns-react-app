@@ -4,7 +4,7 @@ import { TextDiv, TextBorder, ContentFlexbox } from './style';
 import PhotoFrame from './PhotoFrame';
 import DeleteIconWithUserChecker from './DeleteIcon';
 
-// Parent : SortingByTimestamp / FilteringByUser
+// Parent : FilteringContents
 
 class TextArea extends Component {
     state={

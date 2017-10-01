@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import firebase from './firebase';
-//--- style file
 import { Webpage } from './components/General/style';
-//--- component files
+
 import ContentsWithLoginCheck from './components/Contents';
 import Header from './components/Header';
 import Loader from './components/General/Loader';
@@ -13,6 +12,10 @@ import Profile from './components/Admin/Profile';
 class App extends Component {
     
     state= {
+        //check login
+        password: '',
+        email:'',
+        email2:'',
         //interface
         triggerModal: false,
         loginType: true,
@@ -22,25 +25,21 @@ class App extends Component {
         text: '',
         message: '',
         loading: true,
-        //check login
-        password: '',
-        email:'',
-        email2:'',
-        //sync with DB
-        postsArray: [],
-        user: '',
-        loginStatus: false,
+        //Contents
+        userFilter: false,
+        likesFilter: false,
+        latestFirst: "1",
         //Profile & Post
         username: '',
         photoObj: '',
         photofile: null,
-        //photoURL: null,
         uploaded: 0,
         photoloader: false,
-        //Contents
-        userFilter: false,
-        likesFilter: false,
-        latestFirst: "1"
+        //sync with DB
+        postsArray: [],
+        user: '',
+        loginStatus: false,
+        
     }
     
     //------- For ComponentDidMount
@@ -126,53 +125,6 @@ class App extends Component {
 
     //----- Other Methods
 
-    onChange = (e)=>{
-        this.setState({ [e.target.name]: e.target.value })
-    }
-    
-    onClosePost = ()=>{
-        this.setState({ toggleAdmin: 0, modalMenu: false})
-    }
-    
-    onCloseProfile = ()=>{
-        this.setState({ toggleAdmin: 0, modalMenu: false})
-    }
-    
-    onOpenPost=()=>{
-        this.setState({ toggleAdmin: 1, modalMenu: false, userFilter: false, likesFilter: false })
-    }
-    
-    onOpenProfile =()=>{
-        this.setState({ toggleAdmin: 2, modalMenu: false, userFilter: false, likesFilter: false })
-    }
-    
-    onModalShow = ()=>{
-        this.setState({ triggerModal: true });
-    }
-    
-    onModalOff = (e)=>{
-        e.preventDefault();
-        document.getElementById('loginForm').reset();
-        this.setState({ triggerModal: false, loginType: true, error: '' });
-    }
-    
-    onModalMenuOff=(e)=>{
-        e.preventDefault();
-        this.setState({ modalMenu: false });
-    }
-    
-    onModalUserMenuShow = ()=>{
-        this.setState({ modalMenu: true })
-    }
-    
-    onSwitchUserType = () =>{
-        this.setState({loginType: !this.state.loginType, error: ''});
-    }
-    
-    onFilteringCheck =(e)=>{
-        this.setState({ [e.target.name]: e.target.checked});
-    }
-    
     onLogin = (e)=>{
         e.preventDefault();
         
@@ -232,6 +184,53 @@ class App extends Component {
             })
         })
         .catch(error => console.log(error.message))
+    }
+
+    onChange = (e)=>{
+        this.setState({ [e.target.name]: e.target.value })
+    }
+    
+    onClosePost = ()=>{
+        this.setState({ toggleAdmin: 0, modalMenu: false})
+    }
+    
+    onCloseProfile = ()=>{
+        this.setState({ toggleAdmin: 0, modalMenu: false})
+    }
+    
+    onOpenPost=()=>{
+        this.setState({ toggleAdmin: 1, modalMenu: false, userFilter: false, likesFilter: false })
+    }
+    
+    onOpenProfile =()=>{
+        this.setState({ toggleAdmin: 2, modalMenu: false, userFilter: false, likesFilter: false })
+    }
+    
+    onModalShow = ()=>{
+        this.setState({ triggerModal: true });
+    }
+    
+    onModalOff = (e)=>{
+        e.preventDefault();
+        document.getElementById('loginForm').reset();
+        this.setState({ triggerModal: false, loginType: true, error: '' });
+    }
+    
+    onModalMenuOff=(e)=>{
+        e.preventDefault();
+        this.setState({ modalMenu: false });
+    }
+    
+    onModalUserMenuShow = ()=>{
+        this.setState({ modalMenu: true })
+    }
+    
+    onSwitchUserType = () =>{
+        this.setState({loginType: !this.state.loginType, error: ''});
+    }
+    
+    onFilteringCheck =(e)=>{
+        this.setState({ [e.target.name]: e.target.checked});
     }
     
     getPhoto =(e)=>{
@@ -374,9 +373,9 @@ class App extends Component {
                        })
                         .catch(error => this.setState({ error: error.message}));
 
-                    }//---endof if
+                    }
                 })
-        } else {    
+        } else {   //IF there is no photo
             //create a post object to send
             const postObj = {
                 uid: userID,
@@ -402,9 +401,9 @@ class App extends Component {
                    this.setState({ toggleAdmin: 0, modalMenu: false})
                })
                 .catch(error => this.setState({ error: error.message}));
-            }//---endof if text
-        }; //--- endof IF
-    }
+            }
+        };
+    };
     
   render() {
 

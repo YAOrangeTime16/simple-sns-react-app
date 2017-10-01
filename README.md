@@ -9,6 +9,8 @@ FEND16 / Yoko Andrae / Javascript 3 - React
 * [React](https://facebook.github.io/react/)
     
 * [Create React App](https://github.com/facebookincubator/create-react-app)
+
+* [React Image Resizer](https://www.npmjs.com/package/react-image-resizer)
     
 * [Styled-components](https://www.styled-components.com/)
     
@@ -17,24 +19,3 @@ FEND16 / Yoko Andrae / Javascript 3 - React
 * [Pure CSS Loading Spinners by David Bainbridge](http://www.codesynthesis.co.uk/tutorials/pure-css-loading-spinners)
 
 * [Icooon Mono](http://icooon-mono.com/)
-
-* Database Rules
-```js
-{
-  "rules": {
-    "users" : {
-        ".read": "auth!=null",
-        "$uid": {
-          ".write": "$uid === auth.uid"
-        }
-    },
-    "posts" : {
-        ".read" : "true",
-        ".write": "auth!=null"
-    }
-  }
-}
-```
-
-* Storage Rules
-default setting

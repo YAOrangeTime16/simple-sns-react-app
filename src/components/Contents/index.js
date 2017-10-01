@@ -10,9 +10,7 @@ import FilteringContents from './FilteringContents';
 //Parent : App.js
 
 class Contents extends Component {
-    state = {
-        contentFilter: 0
-    }
+    state={}
 
     onAddLike =(e)=>{
         //get current "userID"

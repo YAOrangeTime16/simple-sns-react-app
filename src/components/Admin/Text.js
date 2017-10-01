@@ -5,7 +5,10 @@ import { TextArea } from './style';
 
 function Text(props){
     return(
-      <TextArea name="text" onChange={props.onChange} placeholder="type something to post..."/>  
+      <TextArea 
+      name="text" 
+      onChange={props.onChange} 
+      placeholder="type something to post..."/>  
     );
 }
 

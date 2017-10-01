@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 //---- Styles
 import { ButtonStyled, CloseButton, InputStyled, Link, Message } from './style';
 import { Flexbox } from '../General/style';
@@ -6,14 +6,13 @@ import { Flexbox } from '../General/style';
 
 
 // Parent : Modal.js
-class Login extends Component {
+function Login(props){
 
-    render(){
-        const errorMessage = this.props.error;
+        const errorMessage = props.error;
         
         return(
-            <form id="loginForm" onSubmit={this.props.onLogin}>
-                <CloseButton onClick={this.props.onModalOff}>Close
+            <form id="loginForm" onSubmit={props.onLogin}>
+                <CloseButton onClick={props.onModalOff}>Close
                 </CloseButton>
                     
                 <Flexbox col>
@@ -21,25 +20,24 @@ class Login extends Component {
                         type="email"
                         name="email"
                         placeholder="email"
-                        value={this.props.email}
-                        onChange={this.props.onChange}/>
+                        value={props.email}
+                        onChange={props.onChange}/>
                     <InputStyled
                         type="password"
                         name="password"
                         placeholder="password"
                         
-                        onChange={this.props.onChange}/>
+                        onChange={props.onChange}/>
                     <ButtonStyled primary type="submit">Login</ButtonStyled>
                     <Message>{ errorMessage }</Message>
-                    <ButtonStyled g onClick={this.props.onLoginWithGoogle}>with Google</ButtonStyled>
+                    <ButtonStyled g onClick={props.onLoginWithGoogle}>with Google</ButtonStyled>
 
                 <Link attention bold>
-                    <div onClick={this.props.userType}>Create a new account?</div>
+                    <div onClick={props.userType}>Create a new account?</div>
                 </Link>
                 </Flexbox>
             </form>
         );
-    }
 }
 
 export default Login;

@@ -1,48 +1,43 @@
-import React, { Component } from 'react';
+import React from 'react';
 //---- Styles
 import { ButtonStyled, CloseButton, InputStyled, Link, Message } from './style';
 import { Flexbox } from '../General/style';
 //---- Component Files
 
 
-class Signup extends Component {
-    
-    render(){
-        const errorMessage = this.props.error;
+function Signup(props) {
+
+        const errorMessage = props.error;
         
         return(
-            <form id="loginForm" onSubmit={this.props.onSignup}>
-                    <CloseButton onClick={this.props.onModalOff}>Close
+            <form id="loginForm" onSubmit={props.onSignup}>
+                    <CloseButton onClick={props.onModalOff}>Close
                     </CloseButton>
                     <Flexbox col>
                     <InputStyled attention 
                         type="email" 
                         name="email" 
                         placeholder="email"
-                        value={this.props.email}
-                        onChange={this.props.onChange} />
+                        value={props.email}
+                        onChange={props.onChange} />
                     <InputStyled attention 
                         type="email" 
                         name="email2" 
                         placeholder="comfirm email"
-                        onChange={this.props.onChange} />
+                        onChange={props.onChange} />
                     <InputStyled attention 
                         type="password" 
                         name="password" placeholder="password"
-                        onChange={this.props.onChange} />
+                        onChange={props.onChange} />
                     <ButtonStyled attention>Sign up</ButtonStyled>
                     <Message>{ errorMessage }</Message>
-                   <ButtonStyled g onClick={this.props.onLoginWithGoogle}>with Google</ButtonStyled>
+                   <ButtonStyled g onClick={props.onLoginWithGoogle}>with Google</ButtonStyled>
                    <Link attention bold>
-                    <div onClick={this.props.userType}>Login?</div>
+                    <div onClick={props.userType}>Login?</div>
                     </Link>
                 </Flexbox>
             </form>
-                    
-                            
-
         );
-    }
 }
 
 export default Signup;
