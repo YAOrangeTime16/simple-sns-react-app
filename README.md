@@ -1,4 +1,4 @@
-###Simple SNS App
+### Simple SNS App
 
 FEND16 / Yoko Andrae / Javascript 3 - React
 
