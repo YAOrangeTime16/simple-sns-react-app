@@ -174,15 +174,14 @@ class App extends Component {
     
     onSignout = (e)=>{
         e.preventDefault();
-        firebase.auth().signOut()
-        .then(()=>{this.setState({ 
-                modalMenu: false, 
+        this.setState({
+            modalMenu: false, 
                 toggleAdmin: 0,
                 userFilter: false,
                 likesFilter: false,
                 latestFirst: "1"
-            })
-        })
+        });
+        firebase.auth().signOut()
         .catch(error => console.log(error.message))
     }
 
