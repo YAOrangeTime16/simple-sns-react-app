@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.65027555.css",
-  "main.css.map": "static/css/main.65027555.css.map",
-  "main.js": "static/js/main.24fed88f.js",
-  "main.js.map": "static/js/main.24fed88f.js.map"
+  "main.css": "/simple-sns-react-app/static/css/main.99ffc54a.chunk.css",
+  "main.js": "/simple-sns-react-app/static/js/main.6a63c749.chunk.js",
+  "main.js.map": "/simple-sns-react-app/static/js/main.6a63c749.chunk.js.map",
+  "static/js/1.cf041221.chunk.js": "/simple-sns-react-app/static/js/1.cf041221.chunk.js",
+  "static/js/1.cf041221.chunk.js.map": "/simple-sns-react-app/static/js/1.cf041221.chunk.js.map",
+  "runtime~main.js": "/simple-sns-react-app/static/js/runtime~main.ed0e3862.js",
+  "runtime~main.js.map": "/simple-sns-react-app/static/js/runtime~main.ed0e3862.js.map",
+  "static/css/main.99ffc54a.chunk.css.map": "/simple-sns-react-app/static/css/main.99ffc54a.chunk.css.map",
+  "index.html": "/simple-sns-react-app/index.html",
+  "precache-manifest.c8196aa8409d891251decb1640bf5871.js": "/simple-sns-react-app/precache-manifest.c8196aa8409d891251decb1640bf5871.js",
+  "service-worker.js": "/simple-sns-react-app/service-worker.js"
 }
